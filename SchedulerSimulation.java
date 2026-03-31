@@ -29,8 +29,11 @@ class Process implements Runnable {
     private int burstTime; // Total time the process requires to complete (in milliseconds)
     private int timeQuantum; // Time slice (time quantum) allowed per CPU access (in milliseconds)
     private int remainingTime; // Time left for the process to finish its execution
-
     private int priority;// added here field
+    private long creationTime;//added here field to store the creation time of the process in this code arrival time== creation time because the process is created and added to the queue at the same time
+    private long completionTime;//added here field to store the completion time of the process
+    private long waitingTime;//added here field to store the waiting time of the process(wt = completion time - arrival time - burst time)
+
     // Constructor to initialize the process with name, burst time, and time quantum
     public Process(String name, int burstTime, int timeQuantum ) {
         this.name = name;
@@ -38,6 +41,7 @@ class Process implements Runnable {
         this.timeQuantum = timeQuantum;
         this.remainingTime = burstTime; // Initially, remaining time is equal to the burst time
         priority=(int)(Math.random()*5)+1;//used math random to genrate random numbers 
+       creationTime=System.currentTimeMillis();//store the arrival time of the process
     }
 
     // This method will be called when the thread for this process is started
@@ -143,10 +147,17 @@ class Process implements Runnable {
     public boolean isFinished() {
         return remainingTime <= 0;
     }
-    public int getPriority() {// get method for priority to retrive data for SchedulerSimulation
+    // get method for priority to retrive data for SchedulerSimulation
+    public int getPriority() {
     return priority;
 }
+
+//get method for waiting time to retrive data for wt calculation(wt=tat-burstime)
+public long getWaitingTime() {
+    waitingTime=completionTime-creationTime-burstTime;
+    return waitingTime;
 }
+
 
 public class SchedulerSimulation {
  static int counterContextSwitch=0;//counter for context switch
@@ -154,7 +165,7 @@ public class SchedulerSimulation {
         // ⚠️ IMPORTANT: Put your student ID here to seed the random number generator
         // This makes your output unique to you - DO NOT forget to change this!
         int studentID = 445052171;  // ← CHANGE THIS TO YOUR ACTUAL STUDENT ID
-       
+       list<Process> processList = new ArrayList<>();//list to store the processes for later use in wt calculation
         Random random = new Random(studentID);
         
         // Define the time quantum in milliseconds (the maximum time a process gets in one round)
@@ -269,6 +280,11 @@ public class SchedulerSimulation {
                     process.runToCompletion(); // Run until the process completes
                 }
             }
+            // If the process has finished, store its completion time for later waiting time calculation
+            if(process.isFinished()) {
+                process.completionTime=System.currentTimeMillis();//store the completion time of the process to calculate waiting time later
+                processList.add(process);//add the process to the list for later waiting time calculation
+            }
         }
         System.out.println(Colors.BOLD + Colors.BRIGHT_GREEN + "Context switches: " + (counterContextSwitch-1));//print the number of context switch, -1 because the last process does not cause a context switch
         // End of the scheduler simulation
@@ -282,6 +298,24 @@ public class SchedulerSimulation {
         System.out.println(Colors.BOLD + Colors.BRIGHT_GREEN + 
                           "╚════════════════════════════════════════════════════════════════════════════════╝" + 
                           Colors.RESET + "\n");
+
+    System.out.println(Colors.BOLD + Colors.BRIGHT_CYAN + 
+                      "╔════════════════════════════════════════════════════════════════════════════════╗" + 
+                      Colors.RESET);
+    System.out.println(Colors.BOLD + Colors.BRIGHT_CYAN + "║" + Colors.RESET +
+                      Colors.BG_BLUE + Colors.BRIGHT_WHITE + Colors.BOLD + "process Name | Burst Time | Priority | Waiting Time" + Colors.RESET +
+                      Colors.BOLD + Colors.BRIGHT_CYAN + "║" + Colors.RESET);
+                      for(Process process:processList) {
+                          System.out.println(Colors.BOLD + Colors.BRIGHT_CYAN + "║" + Colors.RESET +
+                          Colors.YELLOW + String.format("  %-11s", process.getName()) + Colors.RESET +
+                          Colors.YELLOW + String.format("│ %-11d", process.getBurstTime()) + Colors.RESET +
+                          Colors.YELLOW + String.format("│ %-9d", process.getPriority()) + Colors.RESET +
+                          Colors.YELLOW + String.format("│ %-12d", process.getWaitingTime()) + Colors.RESET +
+                          Colors.BOLD + Colors.BRIGHT_CYAN + "║" + Colors.RESET);
+                      }
+    System.out.println(Colors.BOLD + Colors.BRIGHT_CYAN + 
+                      "╚════════════════════════════════════════════════════════════════════════════════╝" +     colors.RESET);
+
     }
     
     // Method to add a process to the queue and map, while printing a "ready" message
@@ -301,6 +335,8 @@ public class SchedulerSimulation {
                           Colors.RESET + Colors.BLUE + " (Priority: " +process.getPriority()+") enters the ready queue"+ process.getPriority()  + Colors.RESET + //used get method to retrive priority data and print it in the message
                           " │ Burst time: " + Colors.YELLOW + process.getBurstTime() + "ms" + 
                           Colors.RESET);
+
                           
     }
+
 }
