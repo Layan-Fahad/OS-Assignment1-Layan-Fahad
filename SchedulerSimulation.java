@@ -149,11 +149,12 @@ class Process implements Runnable {
 }
 
 public class SchedulerSimulation {
+ static int counterContextSwitch=0;//counter for context switch
     public static void main(String[] args) {
         // ⚠️ IMPORTANT: Put your student ID here to seed the random number generator
         // This makes your output unique to you - DO NOT forget to change this!
         int studentID = 445052171;  // ← CHANGE THIS TO YOUR ACTUAL STUDENT ID
-        
+       
         Random random = new Random(studentID);
         
         // Define the time quantum in milliseconds (the maximum time a process gets in one round)
@@ -224,7 +225,7 @@ public class SchedulerSimulation {
         while (!processQueue.isEmpty()) {
             // Get the next thread from the queue (FIFO)
             Thread currentThread = processQueue.poll(); // Dequeues the next thread
-            
+            counterContextSwitch++;//increment the counter for context switch
             // Print the current process queue (list of process IDs in the queue)
             System.out.println(Colors.BOLD + Colors.MAGENTA + "┌─ Ready Queue " + "─".repeat(65) + Colors.RESET);
             System.out.print(Colors.MAGENTA + "│ " + Colors.RESET + Colors.BRIGHT_WHITE + "[" + Colors.RESET);
@@ -243,7 +244,7 @@ public class SchedulerSimulation {
             
             // Start the thread, which will run the process for one time quantum
             currentThread.start();
-            
+         
             try {
                 // Wait for the thread to finish its time quantum before continuing to the next process
                 currentThread.join();
@@ -269,7 +270,7 @@ public class SchedulerSimulation {
                 }
             }
         }
-        
+        System.out.println(Colors.BOLD + Colors.BRIGHT_GREEN + "Context switches: " + (counterContextSwitch-1));//print the number of context switch, -1 because the last process does not cause a context switch
         // End of the scheduler simulation
         System.out.println(Colors.BOLD + Colors.BRIGHT_GREEN + 
                           "╔════════════════════════════════════════════════════════════════════════════════╗" + 
@@ -297,8 +298,9 @@ public class SchedulerSimulation {
         
         // Print a message indicating the process has entered the ready queue
         System.out.println(Colors.BLUE + "  ➕ " + Colors.BOLD + Colors.CYAN + process.getName() + 
-                          Colors.RESET + Colors.BLUE + " (Priority: " +process.getPriority()+") enters the ready queue"+ process.getPriority() + ")" + Colors.RESET + //used get method to retrive priority data and print it in the message
+                          Colors.RESET + Colors.BLUE + " (Priority: " +process.getPriority()+") enters the ready queue"+ process.getPriority()  + Colors.RESET + //used get method to retrive priority data and print it in the message
                           " │ Burst time: " + Colors.YELLOW + process.getBurstTime() + "ms" + 
                           Colors.RESET);
+                          
     }
 }
