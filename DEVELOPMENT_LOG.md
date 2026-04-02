@@ -9,24 +9,9 @@ Document your development process as you work on the assignment. Add entries sho
 
 **Requirements**: Minimum 5 entries showing progression over time.
 
----
 
-## Example Entry Format:
 
-### Entry 1 - [April 1, 2026, 2:30 PM]
-**What I did**: Forked the repository and set up my student ID
 
-**Details**: 
-- Created GitHub account with university email
-- Forked the starter repository
-- Changed student ID on line 92 to my actual ID (441234567)
-- Compiled and ran the program successfully
-
-**Challenges**: Had to install JDK first because javac wasn't recognized
-
-**Solution**: Downloaded JDK 17 from Oracle website and set PATH variable
-
-**Time spent**: 30 minutes
 
 ---
 
@@ -66,7 +51,7 @@ Used Random.nextInt(5) + 1 to shift the range from 0–4 to 1–5.
 
 ---
 
-### Entry 3 - [March 30, 2026, 3:30 PM]
+### Entry 3 - [March 31, 2026, 5:00PM]
 **What I did**: 
 Implemented Feature 2: Context Switch Counter.
 **Details**: 
@@ -83,7 +68,7 @@ Adjusted the final output to print counterContextSwitch - 1 to accurately reflec
 45 minutes
 ---
 
-### Entry 4 - [March 31, 2026, 11:45 AM]
+### Entry 4 - [April 1, 2026, 11:45 AM]
 **What I did**: 
 mplemented Feature 3: Track Waiting Time and Summary Table
 **Details**: 
@@ -96,7 +81,7 @@ sed String.format with %-12.3f sec and divided the milliseconds by 1000.0 to dis
 1.5 hours
 ---
 
-### Entry 5 - [Date and Time]
+### Entry 5 - [April 2, 2026, 9:00 PM]
 **What I did**: 
 Final Code Review, Documentation, and Video Recording
 **Details**: 
